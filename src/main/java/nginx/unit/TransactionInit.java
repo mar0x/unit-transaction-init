@@ -1,13 +1,14 @@
 package nginx.unit;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
-import java.util.Set;
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRegistration;
+
 import org.eclipse.jetty.plus.jndi.Transaction;
 
-public class TransactionInit implements ServletContainerInitializer
+public class TransactionInit implements ServletContextListener
 {
     static {
         try {
@@ -24,8 +25,13 @@ public class TransactionInit implements ServletContainerInitializer
     }
 
     @Override
-    public void onStartup(Set<java.lang.Class<?>> c, ServletContext ctx)
-               throws ServletException
+    public void contextInitialized(ServletContextEvent sce)
+    {
+        ((ServletRegistration.Dynamic) sce.getServletContext().getServletRegistration("jsp")).setLoadOnStartup(1);
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce)
     {
     }
 }
